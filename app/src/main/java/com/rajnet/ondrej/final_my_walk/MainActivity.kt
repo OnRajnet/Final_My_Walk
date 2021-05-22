@@ -20,10 +20,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var running = false
     private var totalSteps = 0f
     private var previousTotalSteps = 0f
+    private var ps = "900"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        tv_totalMax.setText(ps)
 
         btnHistory.setOnClickListener{
             val intent = Intent(this, History::class.java )
@@ -34,14 +37,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             addRecord()
         }
 
-        loadData()
         resetStep()
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
 
     }
 
-    //Method for saving the employee records in database
     private fun addRecord() {
 
         val name = etName.text.toString()
@@ -83,7 +84,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             totalSteps = event!!.values[0]
             val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
             tv_stepsTaken.text = ("$currentSteps")
-
             progress_circular.apply {
                 setProgressWithAnimation(currentSteps.toFloat())
             }
@@ -99,25 +99,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         tv_stepsTaken.setOnClickListener{
             Toast.makeText(this, "Dlouhé podržení pro reset kroků", Toast.LENGTH_SHORT).show()
         }
-
         tv_stepsTaken.setOnLongClickListener {
             previousTotalSteps = totalSteps
             tv_stepsTaken.text = 0.toString()
-            saveData()
             true
         }
-    }
-
-    private fun saveData(){
-        val sharedPreferences = getSharedPreferences("Preference", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putFloat("key1", previousTotalSteps)
-        editor.apply()
-    }
-    private fun loadData(){
-        val sharedPreferences = getSharedPreferences("Preference", Context.MODE_PRIVATE)
-        val savedNumber = sharedPreferences.getFloat("key1",0f)
-        Log.d("MainActivity", "$savedNumber")
-        previousTotalSteps = savedNumber
     }
 }

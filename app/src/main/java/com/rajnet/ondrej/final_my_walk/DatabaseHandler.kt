@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import com.rajnet.ondrej.final_my_walk.HisModelClass
 
-//creating the database logic, extending the SQLiteOpenHelper base class
 class DatabaseHandler(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -23,7 +22,6 @@ class DatabaseHandler(context: Context) :
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        //creating table with fields
         val CREATE_CONTACTS_TABLE = ("CREATE TABLE " + TABLE_CONTACTS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_DATE + " TEXT," + KEY_STEPS + " INTEGER" + ")")
@@ -108,10 +106,6 @@ class DatabaseHandler(context: Context) :
         db.close()
         return success
     }
-
-    /**
-     * Function to delete record
-     */
     fun deleteWalk(his: HisModelClass): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()

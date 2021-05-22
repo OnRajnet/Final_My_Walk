@@ -21,9 +21,7 @@ class History : AppCompatActivity() {
     }
 
     private fun getItemsList(): ArrayList<HisModelClass> {
-        //creating the instance of DatabaseHandler class
         val databaseHandler: DatabaseHandler = DatabaseHandler(this)
-        //calling the viewEmployee method of DatabaseHandler class to read the records
         val hisList: ArrayList<HisModelClass> = databaseHandler.viewWalk()
 
         return hisList
@@ -36,11 +34,8 @@ class History : AppCompatActivity() {
             rvItemsList.visibility = View.VISIBLE
             tvNoRecordsAvailable.visibility = View.GONE
 
-            // Set the LayoutManager that this RecyclerView will use.
             rvItemsList.layoutManager = LinearLayoutManager(this)
-            // Adapter class is initialized and list is passed in the param.
             val itemAdapter = ItemAdapter(this, getItemsList())
-            // adapter instance is set to the recyclerview to inflate the items.
             rvItemsList.adapter = itemAdapter
         } else {
 
@@ -54,8 +49,6 @@ class History : AppCompatActivity() {
     fun updateRecordDialog(hisModelClass: HisModelClass) {
         val updateDialog = Dialog(this, R.style.Theme_Dialog)
         updateDialog.setCancelable(false)
-        /*Set the screen content from a layout resource.
-         The resource will be inflated, adding all top-level views to the screen.*/
         updateDialog.setContentView(R.layout.dialog_update)
 
         updateDialog.etUpdateName.setText(hisModelClass.name)
@@ -76,7 +69,7 @@ class History : AppCompatActivity() {
 
                     setupListofDataIntoRecyclerView()
 
-                    updateDialog.dismiss() // Dialog will be dismissed
+                    updateDialog.dismiss()
                 }
             } else {
                 Toast.makeText(
@@ -89,27 +82,17 @@ class History : AppCompatActivity() {
         updateDialog.tvCancel.setOnClickListener(View.OnClickListener {
             updateDialog.dismiss()
         })
-        //Start the dialog and display it on screen.
         updateDialog.show()
     }
-
-    /**
-     * Method is used to show the delete alert dialog.
-     */
     fun deleteRecordAlertDialog(hisModelClass: HisModelClass) {
         val builder = AlertDialog.Builder(this)
-        //set title for alert dialog
         builder.setTitle("Delete Record")
-        //set message for alert dialog
         builder.setMessage("Are you sure you wants to delete ${hisModelClass.name}.")
         builder.setIcon(android.R.drawable.ic_dialog_alert)
 
-        //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, which ->
 
-            //creating the instance of DatabaseHandler class
             val databaseHandler: DatabaseHandler = DatabaseHandler(this)
-            //calling the deleteEmployee method of DatabaseHandler class to delete record
             val status = databaseHandler.deleteWalk(HisModelClass(hisModelClass.id, "", "", hisModelClass.steps))
             if (status > -1) {
                 Toast.makeText(
@@ -121,17 +104,14 @@ class History : AppCompatActivity() {
                 setupListofDataIntoRecyclerView()
             }
 
-            dialogInterface.dismiss() // Dialog will be dismissed
+            dialogInterface.dismiss()
         }
-        //performing negative action
         builder.setNegativeButton("No") { dialogInterface, which ->
-            dialogInterface.dismiss() // Dialog will be dismissed
+            dialogInterface.dismiss()
         }
-        // Create the AlertDialog
         val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
-        alertDialog.show()  // show the dialog to UI
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
 }
